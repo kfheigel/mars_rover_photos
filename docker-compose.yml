@@ -1,0 +1,23 @@
+version: '3'
+services:
+    mysql:
+        image: mysql
+        container_name: mysql
+        ports:
+            - 3306:3306
+        environment:
+            MYSQL_ROOT_PASSWORD: heigel
+            MYSQL_DATABASE: nasa_api
+    
+    phpmyadmin:
+        image: phpmyadmin/phpmyadmin
+        ports:
+            - 8080:80
+        depends_on:
+            - mysql
+        container_name: phpmyadmin
+        links:
+            - mysql
+        environment:
+            PMA_HOST: mysql
+            
