@@ -1,0 +1,29 @@
+{
+    "api_guide": 
+        {
+            "info" : "Welcome to MARS ROVER PHOTOS api, that connects to NASA api, downloads data (including urls to mars rovers photos), and stores that data in database.",
+            "endpoints":
+                {
+                    "info": "There are two endpoints, that you can use for your purposes.",
+                    "first_endpoint" :
+                    {
+                        "description":"The first one allows you to get every photo: by selected Mars rover, by camera that took the photo and by specific date or between two dates - this one is not mandatory",
+                        "pattern":"/get/images/api_key/YOUR_API_KEY/rover/ROVER_NAME/camera/TYPE_OF_CAMERA/SELECTED_START_DATE/SELECTED_END_DATE"
+                    },
+                    "second_endpoint" :
+                    {
+                        "description":"The second one allows you to get details only for specific photo selected by photo_id",
+                        "pattern":"/get/image/api_key/YOUR_API_KEY/photo_id/PHOTO_ID"
+                    }
+                },
+            "example_parameters":
+                {
+                    "ROVER_NAME": "curiosity, opportunity, spirit, ",
+                    "TYPE_OF_CAMERA": "fhaz, rhaz, navcam, chemcam, mahli",
+                    "SELECTED_START_DATE": "2020-01-01",
+                    "SELECTED_END_DATE": "2020-02-06",
+                    "PHOTO_ID": "714722"
+                }
+
+        }
+}

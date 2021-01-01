@@ -5,7 +5,7 @@ namespace App\Controller;
 use DateTime;
 use App\Entity\Images;
 use App\Entity\ApiToken;
-use App\Service\CheckTokenService;
+use App\Service\CheckerService;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
@@ -16,38 +16,36 @@ use Sensio\Bundle\FrameworkExtraBundle\Configuration\ParamConverter;
 class ApiController extends AbstractController
 {
     private $entityManager;
-    private $checkTokenService;
+    private $checkerService;
 
-    public function __construct(EntityManagerInterface $entityManager, CheckTokenService $checkTokenService)
+    public function __construct(EntityManagerInterface $entityManager, CheckerService $checkerService)
     {
         $this->entityManager = $entityManager;
-        $this->checkTokenService = $checkTokenService;
+        $this->checkerService = $checkerService;
     }
     /**
      * @Route("/get/images/api/info", name="api", methods="GET")
      */
     public function index(): Response
     {
-        return $this->json([
-            'message' => 'Welcome to your new api!',
-            'path' => 'src/Controller/IndexController.php',
-        ]);
+        $json = file_get_contents('../json/api_info.json');
+        return new JsonResponse(json_decode($json));
     }
 
     /**
-     * @Route("/get/images/rover/{rover<curiosity|opportunity|spirit>}/camera/{camera<fhaz|rhaz|navcam|chemcam|mahli>}/api_key/{apiKey}/{start?''}/{end?''}", name="list_of_photos", methods="GET")
+     * @Route("/get/images/api_key/{apiKey}/rover/{rover}/camera/{camera}/{start?''}/{end?''}", 
+     * name="list_of_photos", 
+     * methods="GET",
+     * requirements={
+     *      "rover" = "curiosity|opportunity|spirit",
+     *      "camera" = "fhaz|rhaz|navcam|chemcam|mahli",
+     *  })
      */
-    public function getImages(string $rover, string $camera, string $apiKey, string $start, string $end): Response
+    public function getImages(string $apiKey, string $rover, string $camera, string $start, string $end): Response
     {
-        $em = $this->getDoctrine()->getManager();
-        $apiToken =$em->getRepository(ApiToken::class)->findBy([
-            'token' => $apiKey
-        ]);
-        dd($apiToken[0]->getExpiresAt());
-        if(empty($apiToken)){
-            return $this->json([
-                'message' => 'Wrong Token!',
-            ]);
+        $check = $this->checkerService->check($apiKey, $start, $end);
+        if(!empty($check)){
+            return $this->json($check);
         }
 
         $repository = $this->entityManager->getRepository(Images::class);
@@ -56,15 +54,18 @@ class ApiController extends AbstractController
     }
 
     /**
-     * @Route("/get/image/info/api_key/{apiKey}/photo_id/{id?0} ", name="photo_info", methods="GET")
+     * @Route("/get/image/api_key/{apiKey}/photo_id/{id?0}", 
+     * name="photo_info", 
+     * methods="GET",
+     * requirements={"id"="\d+"})
      */
     public function getImageInfo(string $apiKey, int $id): Response
     {
-        if(!$this->checkTokenService->checkToken($apiKey)){
-            return $this->json([
-                'message' => 'Wrong Token!',
-            ]);
+        $check = $this->checkerService->check($apiKey);
+        if(!empty($check)){
+            return $this->json($check);
         }
+        
         $repository = $this->entityManager->getRepository(Images::class);
         $imageInfo = $repository->imageInfoQuery($id);
         return new JsonResponse($imageInfo);
