@@ -7,7 +7,8 @@
 <h1>NASA API</h1>
 
     {% if  app.user %}
-        <h2>Your Token is: <span class="badge bg-secondary">{{ token }}</span></h2>
+        <h2 class="token">Your Token is: <span class="badge bg-secondary">{{ token }}</span></h2>
+        <h2 class="expiresat">And expires at: <span class="badge bg-secondary">{{ expiresAt }}</span></h2>
         <a class="btn btn-primary btn-lg" href="{{ path('app_logout') }}">Logout</a>
         <a class="btn btn-secondary btn-lg" href="{{ path('api') }}">API</a>
         <a class="btn btn-info btn-lg" href="{{ path('regenerate_token') }}">Regenerate Token</a>

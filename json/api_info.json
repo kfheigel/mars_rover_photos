@@ -23,7 +23,13 @@
                     "SELECTED_START_DATE": "2020-01-01",
                     "SELECTED_END_DATE": "2020-02-06",
                     "PHOTO_ID": "714722"
+                },
+            "how_to_start":
+                {
+                    "1.": "Create account, and confirm your e-mail adress - here you'll receive YOUR_API_KEY",
+                    "2.": "Login to the service",
+                    "3.": "Enjoy the API by clicking the API button!",
+                    "3a.": "When YOUR_API_KEY will expire, just go back to the home page and Regenerate Token!"
                 }
-
         }
 }
