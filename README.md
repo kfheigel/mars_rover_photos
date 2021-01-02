@@ -47,6 +47,7 @@ $ php bin/console app:refresh-images
 $ symfony serve -d
 ```
 ### Additional info
+You need to register to use this API. After the registration, you'll receive an email confirmation with YOUR_API_KEY token. Without it, you are not allowed to use the api endpoints. 
 There are two endpoints, that you can use for your purposes.
 The first one allows you to get every photo: by selected Mars rover, by camera that took the photo and by specific date or between two dates - this one is not mandatory
 ```
